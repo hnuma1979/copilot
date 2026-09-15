@@ -1,6 +1,6 @@
 ---
 description: YAMLファイルのコードスタイルに関する指示です。
-applyTo: **/*.yml, **/*.yaml
+applyTo: "**/*.yml"
 ---
 
 ## ファイル名
