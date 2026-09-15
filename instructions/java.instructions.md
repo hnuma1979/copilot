@@ -4,7 +4,7 @@ description: 'Javaコードに関する指示を記述するファイルです�
 applyTo: '**/*.java'
 ---
 
-# Instructions
+# コードスタイル
 - コード規約は Google Java Style Guide に従ってください。
 - クラス名は UpperCamelCase を使用してください。
 ```java
@@ -35,6 +35,195 @@ package com.example.project.controller;
 - どうしても避けれない場合は使用しても構いませんが、原則として避けるようにしてください。
 - `Javadoc` はクラス、メソッド、フィールドに必要に応じて記述してください。
 - `package-private` 以下のメソッドには簡略化した `javadoc` を記述してください。
+
+## ベストプラクティス
+- `try-with-resources` を使用することを推奨します。
+  - 非推奨の書き方
+```java
+InputStream inputStream = null;
+try {
+  InputStream inputStream = new FileInputStream("file.txt");
+} catch (IOException e) {
+  e.printStackTrace();
+} finally {
+  if (inputStream != null) {
+    try {
+      inputStream.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+}
+```
+  - 推奨の書き方
+```java
+try (InputStream inputStream = new FileInputStream("file.txt")) {
+  // リソースを使用する処理
+} catch (IOException e) {
+  e.printStackTrace();
+}
+```
+
+- `if-else if-else` よりも `switch` を使用することを推奨します。
+  - 非推奨の書き方
+```java
+if ( test.equals("example")) {
+  // 条件が真の場合の処理
+} else if ( test.equals("example 2")) {
+  // 条件が真の場合の処理
+} else {
+  // 条件がすべて偽の場合の処理
+}
+```
+  - 推奨の書き方
+```java
+switch (test) {
+  case "example" ->{
+    // 条件が真の場合の処理
+  }
+  case "example 2" ->{
+    // 条件が真の場合の処理
+  }
+  default ->{
+    // 条件がすべて偽の場合の処理
+  }
+}
+```
+
+- `enum` を使用してください。
+  - 非推奨の書き方
+```java
+public static final int STATUS_ACTIVE = 1;
+public static final int STATUS_INACTIVE = 0;
+```
+  - 推奨の書き方
+```java
+public enum Status {
+  ACTIVE,
+  INACTIVE
+}
+```
+
+- `instanceof ClassName obj` の使用を推奨します。
+  - 非推奨の書き方
+```java
+if (obj.getClass() == SomeClass.class) {
+  SomeClass someClass = (SomeClass) obj;
+}
+
+if (obj instanceof SomeClass) {
+  SomeClass someClass = (SomeClass) obj;
+}
+```
+  - 推奨の書き方
+```java
+if (obj instanceof SomeClass someClass) {
+  // someClass を使用する処理
+}
+```
+
+- ラムダ式を使用することを推奨します。
+  - 非推奨の書き方
+```java
+Runnable runnable = new Runnable() {
+  @Override
+  public void run() {
+    // 処理
+  }
+};
+```
+  - 推奨の書き方
+```java
+Runnable runnable = () -> {
+  // 処理
+};
+```
+
+- 変更不可リストを使用してください。
+  - 非推奨の書き方
+```java
+List<String> list = new ArrayList<>();
+list.add("example");
+```
+  - 推奨の書き方１（変更不可リストを使用する場合）
+```java
+List<String> list = List.of("example");
+```
+  - 推奨の書き方２（通常のリストを使用する場合）
+```java
+List<String> list = new ArrayList<>();
+list.add("example");
+list = Collections.unmodifiableList(list);
+``` 
+
+- 複数行文字列は `"""` を使用して記述することを推奨します。
+- 非推奨の書き方
+```java
+String text = "複数行の文字列\nを記述する";
+```
+- 推奨の書き方
+```java
+String text = """
+複数行の文字列
+を記述する
+""";
+``` 
+
+- メソッド内の変数はvarを使用して型推論を活用してください。
+  - 非推奨の書き方
+```java
+String text = "example";
+int number = 123;
+```
+  - 推奨の書き方
+```java
+var text = "example";
+var number = 123;
+```
+
+- 文字列の空白比較の方法は `isBlank()` を使用することを推奨します。
+  - 非推奨の書き方
+```java
+if (str.trim().isEmpty()) {
+  // 空白の場合の処理
+}
+
+if (str.trim().equals("")) {
+  // 空白の場合の処理
+}
+```
+  - 推奨の書き方
+```java
+if (str.isBlank()) {
+  // 空白の場合の処理
+}
+```
+- パターンマッチングを活用してください。
+  - 非推奨の書き方
+```java
+if (obj instanceof SomeClass1 obj1) {
+  // obj1 を使用する処理
+} else if (obj instanceof SomeClass2 obj2) {
+  // obj2 を使用する処理
+} else {
+  // その他の場合の処理
+}
+```
+  - 推奨の書き方
+```java
+switch (obj) {
+  case SomeClass1 obj1 -> {
+    // obj1 を使用する処理
+  }
+  case SomeClass2 obj2 -> {
+    // obj2 を使用する処理
+  }
+  default -> {
+    // その他の場合の処理
+  }
+}
+```
+
 
 ## コントローラー（ **Controller** ）
 - `@Controller`, `@RequestMapping` をクラスの上に使用してください。
@@ -75,6 +264,7 @@ package com.example.project.controller;
 ## エンティティ（ **Entity** ）
 - `@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`, `@Table(name = "table_name")` を使用してください。
 - プライマリーキーが自動生成される場合は、`@Id` を使用してください。
+- Serializable を実装してください。
 - プライマリーキーが自動生成されない場合（外部キー＝主キー）は、`@Id` を使用しないでください。（更新対象とされる）
 - フィールドには `@Column(name = "column_name")` を必要に応じて使用してください。
 - 作成日時には `@ReadOnlyProperty` を使用してください。（更新不可、DBにより自動設定される）
