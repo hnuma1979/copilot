@@ -1,0 +1,55 @@
+{
+    "schemaVersion": 1,
+    "name": "hnuma1979-copilot-plugin",
+    "description": "Java and frontend project instructions with Javadoc support",
+    "version": "1.0.1",
+    "skills": [
+        {
+            "name": "javadoc",
+            "description": "Generates Javadoc documentation for Java code",
+            "path": "skills/javadoc"
+        }
+    ],
+    "instructions": [
+        {
+            "name": "all",
+            "path": "instructions/all.instructions.md"
+        },
+        {
+            "name": "build.gradle",
+            "path": "instructions/build.gradle.instructions.md"
+        },
+        {
+            "name": "css",
+            "path": "instructions/css.instructions.md"
+        },
+        {
+            "name": "html",
+            "path": "instructions/html.instructions.md"
+        },
+        {
+            "name": "java",
+            "path": "instructions/java.instructions.md"
+        },
+        {
+            "name": "javascript",
+            "path": "instructions/javascript.instructions.md"
+        },
+        {
+            "name": "properties",
+            "path": "instructions/properties.instructions.md"
+        },
+        {
+            "name": "shell",
+            "path": "instructions/shell.instructions.md"
+        },
+        {
+            "name": "sql",
+            "path": "instructions/sql.instructions.md"
+        },
+        {
+            "name": "yml",
+            "path": "instructions/yml.instructions.md"
+        }
+    ]
+}
